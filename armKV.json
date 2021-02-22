@@ -79,27 +79,8 @@
             ]
             
           
-        },
-        {
-        "name": "lockresource",
-        "type": "Microsoft.Authorization/locks",
-        "apiVersion": "2016-09-01",
+        }
         
-        "properties": {
-            "level": "CanNotDelete",
-            "notes": "This resource can't be deleted by you",
-               "accessPolicies": [
-                    {
-                        "objectId": "[parameters('objectId')]",
-                        "tenantId": "[subscription().tenantId]",
-                        "permissions": {
-                            "keys": "[parameters('keyPermissions')]",
-                            "secrets": "[parameters('secretsPermissions')]"
-                        }
-                    }
-                ]
-        }
-        }
     ],
     "outputs": {}
 }
