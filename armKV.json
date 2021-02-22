@@ -18,6 +18,18 @@
         "location": {
             "type": "string",
            "defaultValue": "[resourceGroup().location]"
+        },
+        "objectId": {
+            "type": "string",
+            "defaultValue": "0b42b4d3-47cf-4fbb-9bca-2756741d1f58"
+        },
+        "keyPermissions": {
+            "type": "array",
+          "defaultValue": ["all"]
+        },
+        "secretsPermissions": {
+            "type": "array",
+            "defaultValue":["all"]
         }
     },
     "functions": [],
@@ -30,16 +42,27 @@
             "location": "[parameters('location')]",
            
             "properties": {
-                "enabledForDeployment": false,
-                "enabledForTemplateDeployment": false,
-                "enabledForDiskEncryption": false,
+                "enabledForDeployment": true,
+                "enabledForTemplateDeployment": true,
+                "enabledForDiskEncryption": true,
+                "enableSoftDelete": true,
+                "enablePurgeProtection": true,
                                
                 "tenantId": "[subscription().tenantId]",
                 "sku": {
                     "name": "standard",
                     "family": "A"
                 },
-                "accessPolicies": []
+                "accessPolicies": [
+                    {
+                        "objectId": "[parameters('objectId')]",
+                        "tenantId": "[subscription().tenantId]",
+                        "permissions": {
+                            "keys": "[parameters('keyPermissions')]",
+                            "secrets": "[parameters('secretsPermissions')]"
+                        }
+                    }
+                ]
             }, 
             "resources": [
                 {
