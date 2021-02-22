@@ -1,0 +1,72 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "nameKVault": {
+            "type": "string"
+        },
+        "secretName": {
+            "type": "string",
+            "metadata": {
+                "description": "description"
+            }
+        },
+        "secretValue": {
+            "type": "securestring"
+            
+        }, 
+        "location": {
+            "type": "string",
+           "defaultValue": "[resourceGroup().location]"
+        }
+    },
+    "functions": [],
+    "variables": {},
+    "resources": [
+        {
+            "name": "[parameters('nameKVault')]",
+            "type": "Microsoft.KeyVault/vaults",
+            "apiVersion": "2016-10-01",
+            "location": "[parameters('location')]",
+           
+            "properties": {
+                "enabledForDeployment": false,
+                "enabledForTemplateDeployment": false,
+                "enabledForDiskEncryption": false,
+                               
+                "tenantId": "[subscription().tenantId]",
+                "sku": {
+                    "name": "standard",
+                    "family": "A"
+                },
+                "accessPolicies": []
+            }, 
+            "resources": [
+                {
+                    "name": "[concat(parameters('nameKVault'),'/', parameters('secretName'))]",
+                    "type": "Microsoft.KeyVault/vaults/secrets",
+                    "apiVersion": "2016-10-01",
+                    "location": "[parameters('location')]",
+                     "dependsOn": [
+                         "[resourceId('Microsoft.KeyVault/vaults', parameters('nameKVault'))]"],
+                         "properties": {
+                         "value": "[parameters('secretValue')]"
+                            }
+                    }
+            ]
+            
+          
+        },
+        {
+        "name": "lockresource",
+        "type": "Microsoft.Authorization/locks",
+        "apiVersion": "2016-09-01",
+        
+        "properties": {
+            "level": "CanNotDelete",
+            "notes": "This resource can't be deleted by you"
+        }
+        }
+    ],
+    "outputs": {}
+}
